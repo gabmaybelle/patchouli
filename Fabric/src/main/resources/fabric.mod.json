@@ -9,9 +9,12 @@
     "Vazkii",
     "williewillus"
   ],
+  "contributors": [
+    "gabmaybelle (26.3 port)"
+  ],
   "contact": {
-    "issues": "https://github.com/VazkiiMods/Patchouli/issues",
-    "sources": "https://github.com/Vazkii/ModsPatchouli"
+    "issues": "https://github.com/gabmaybelle/patchouli/issues",
+    "sources": "https://github.com/gabmaybelle/patchouli"
   },
 
   "license": "CC BY-NC-SA 3.0",

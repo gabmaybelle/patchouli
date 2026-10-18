@@ -1,3 +1,15 @@
+# Patchouli: Unofficial 26.3 Port
+
+> **This is an unofficial port** of [Patchouli](https://github.com/VazkiiMods/Patchouli) by Vazkii and williewillus
+> to Minecraft 26.3 (Fabric and NeoForge), made so that mods with Patchouli books (such as Botania) work on 26.3
+> before an official update exists. It is not made or supported by the Patchouli authors: please report problems
+> with this port [here](https://github.com/gabmaybelle/patchouli/issues), not to the official Patchouli tracker.
+> The mod id stays `patchouli`, so mods that depend on Patchouli find it. Once an official 26.3 Patchouli is
+> released, use that instead.
+>
+> Licensed like the original, under [CC BY-NC-SA 3.0](LICENSE): free, non-commercial, credit to the original
+> authors. The 26.3 port lives on the `26.3` branch; the other branches are the original history.
+
 # Patchouli
 Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers
 

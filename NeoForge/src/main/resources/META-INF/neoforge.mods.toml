@@ -1,7 +1,7 @@
 modLoader="javafml"
 license="CC BY-NC-SA 3.0"
 loaderVersion="[4,)"
-issueTrackerURL="https://github.com/VazkiiMods/Patchouli"
+issueTrackerURL="https://github.com/gabmaybelle/patchouli/issues"
 logoFile="logo.png"
 
 [[mods]]
@@ -9,6 +9,7 @@ modId="${mod_id}"
 displayName="${mod_name}"
 version="${version}"
 authors="Vazkii, williewillus"
+credits="Unofficial 26.3 port by gabmaybelle"
 description='''
 ${mod_description}
 '''
