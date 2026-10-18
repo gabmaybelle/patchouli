@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.template;
 
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -172,9 +173,10 @@ public class VariableAssigner {
 	}
 
 	private static IVariable stacks(IVariable arg, HolderLookup.Provider registries) {
-		return IVariable.from(arg.as(Ingredient.class).display().resolveForStacks(new ContextMap.Builder()
-				.withParameter(SlotDisplayContext.REGISTRIES, registries)
-				.create(SlotDisplayContext.CONTEXT)).toArray(new ItemStack[0]), registries);
+		return IVariable.from(arg.as(Ingredient.class).display().resolveForStacks(ContextMap.builder()
+				// PORT-26.3: the context holds a RegistryAccess now
+				.set(SlotDisplayContext.REGISTRIES, registries instanceof RegistryAccess access ? access : null)
+				.buildAndValidate(SlotDisplayContext.CONTEXT)).toArray(new ItemStack[0]), registries);
 	}
 
 	private static String ename(String arg) {

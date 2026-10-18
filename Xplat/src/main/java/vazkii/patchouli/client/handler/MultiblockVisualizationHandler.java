@@ -1,16 +1,10 @@
 package vazkii.patchouli.client.handler;
 
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
@@ -27,20 +21,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import org.joml.Matrix4fc;
-
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.client.multiblock.GhostBlockGeometry;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
-import vazkii.patchouli.mixin.client.AccessorMultiBufferSource;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Objects;
-import java.util.SequencedMap;
 import java.util.function.Function;
 
 public final class MultiblockVisualizationHandler {
@@ -117,9 +106,10 @@ public final class MultiblockVisualizationHandler {
 		}
 	}
 
-	public void onWorldRenderLast(PoseStack ms, Matrix4fc pose) {
+	// PORT-26.3: called while the level collects its submits; the camera rotation is already applied
+	public void onWorldRenderLast(PoseStack ms, SubmitNodeCollector submitNodeCollector) {
 		if (hasMultiblock && multiblock != null) {
-			renderMultiblock(Minecraft.getInstance().level, ms, pose);
+			renderMultiblock(Minecraft.getInstance().level, ms, submitNodeCollector);
 		}
 	}
 
@@ -150,9 +140,8 @@ public final class MultiblockVisualizationHandler {
 		}
 	}
 
-	public void renderMultiblock(Level world, PoseStack ms, Matrix4fc pose) {
+	public void renderMultiblock(Level world, PoseStack ms, SubmitNodeCollector submitNodeCollector) {
 		ms.pushPose();
-		ms.mulPose(pose);
 		Minecraft mc = Minecraft.getInstance();
 		if (!isAnchored) {
 			facingRotation = getRotation(mc.player);
@@ -183,8 +172,6 @@ public final class MultiblockVisualizationHandler {
 		lookingState = null;
 		lookingPos = checkPos;
 
-		SubmitNodeStorage submitNodeStorage = mc.gameRenderer.getFeatureRenderDispatcher().getSubmitNodeStorage();
-
 		Pair<BlockPos, Collection<IMultiblock.SimulateResult>> sim = multiblock.simulate(world, getStartPos(), getFacingRotation(), true);
 		for (IMultiblock.SimulateResult r : sim.getSecond()) {
 			float alpha = 0.3F;
@@ -203,10 +190,10 @@ public final class MultiblockVisualizationHandler {
 					BlockState renderState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame).rotate(facingRotation);
 					float scale = 1;
 					if (renderState.getBlock() == Blocks.AIR) {
-						renderState = Blocks.RED_CONCRETE.defaultBlockState();
+						renderState = Blocks.CONCRETE.red().defaultBlockState();
 						scale = 0.3F;
 					}
-					submitNodeStorage.submitCustomGeometry(
+					submitNodeCollector.submitCustomGeometry(
 							ms,
 							RenderTypes.translucentMovingBlock(),
 							new GhostBlockGeometry(r.getWorldPosition(), renderState, alpha, scale));
@@ -249,27 +236,6 @@ public final class MultiblockVisualizationHandler {
 	 */
 	private Rotation getRotation(Entity entity) {
 		return RotationUtil.rotationFromFacing(entity.getDirection());
-	}
-
-	private MultiBufferSource.BufferSource initBuffers(MultiBufferSource.BufferSource original) {
-		ByteBufferBuilder fallback = ((AccessorMultiBufferSource) original).getFallbackBuffer();
-		SequencedMap<RenderType, ByteBufferBuilder> layerBuffers = ((AccessorMultiBufferSource) original).getFixedBuffers();
-		SequencedMap<RenderType, ByteBufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
-		for (Map.Entry<RenderType, ByteBufferBuilder> e : layerBuffers.entrySet()) {
-			remapped.put(/*GhostRenderLayer.remap(*/e.getKey()/*)*/, e.getValue());
-		}
-		return new GhostBuffers(fallback, remapped);
-	}
-
-	private static class GhostBuffers extends MultiBufferSource.BufferSource {
-		protected GhostBuffers(ByteBufferBuilder fallback, SequencedMap<RenderType, ByteBufferBuilder> layerBuffers) {
-			super(fallback, layerBuffers);
-		}
-
-		@Override
-		public VertexConsumer getBuffer(RenderType type) {
-			return super.getBuffer(/*GhostRenderLayer.remap(*/type/*)*/);
-		}
 	}
 
 	/*private static class GhostRenderLayer extends RenderType {

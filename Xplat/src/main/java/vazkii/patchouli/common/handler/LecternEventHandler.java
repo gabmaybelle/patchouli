@@ -2,6 +2,7 @@ package vazkii.patchouli.common.handler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -53,7 +54,7 @@ public class LecternEventHandler {
 		tileEntity.setBook(ItemStack.EMPTY);
 		LecternBlock.resetBookState(player, tileEntity.getLevel(), tileEntity.getBlockPos(), tileEntity.getBlockState(), false);
 		if (!player.getInventory().add(itemstack)) {
-			player.drop(itemstack, false);
+			player.drop(itemstack, false, Prediction.SERVER_ONLY);
 		}
 	}
 }

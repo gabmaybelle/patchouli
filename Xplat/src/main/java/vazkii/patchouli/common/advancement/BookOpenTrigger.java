@@ -3,12 +3,12 @@ package vazkii.patchouli.common.advancement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import net.minecraft.advancements.criterion.ContextAwarePredicate;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
-import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
+import net.minecraft.advancements.predicates.MinMaxBounds;
+import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import vazkii.patchouli.api.PatchouliAPI;
 
@@ -38,10 +38,10 @@ public class BookOpenTrigger extends SimpleCriterionTrigger<BookOpenTrigger.Trig
 		trigger(player, instance -> instance.matches(book, entry, page));
 	}
 
-	public record TriggerInstance(Optional<ContextAwarePredicate> player, Identifier book, Optional<Identifier> entry, MinMaxBounds.Ints page) implements SimpleInstance {
+	public record TriggerInstance(Optional<Holder<LootItemCondition>> player, Identifier book, Optional<Identifier> entry, MinMaxBounds.Ints page) implements SimpleInstance {
 
 		public static Codec<BookOpenTrigger.TriggerInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-				EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+				LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
 				Identifier.CODEC.fieldOf("book").forGetter(TriggerInstance::book),
 				Identifier.CODEC.optionalFieldOf("entry").forGetter(TriggerInstance::entry),
 				MinMaxBounds.Ints.CODEC.optionalFieldOf("page", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::page)

@@ -5,7 +5,9 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -43,6 +45,10 @@ public class FabricModInitializer implements ModInitializer {
 
 		BookRegistry.INSTANCE.init();
 
+		// PORT-26.3: servers only send the recipe serializers mods ask for; books can show any recipe, so ask for all
+		// (the NeoForge side sends every recipe type in OnDatapackSyncEvent)
+		BuiltInRegistries.RECIPE_SERIALIZER.forEach(RecipeSynchronization::synchronizeRecipeSerializer);
+		RegistryEntryAddedCallback.event(BuiltInRegistries.RECIPE_SERIALIZER).register((rawId, id, serializer) -> RecipeSynchronization.synchronizeRecipeSerializer(serializer));
 		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, _, success) -> {
 			if (success) {
 				ReloadContentsHandler.dataReloaded(server);

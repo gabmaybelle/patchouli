@@ -15,7 +15,7 @@ import vazkii.patchouli.client.handler.TooltipHandler;
 
 @Mixin(AbstractContainerScreen.class)
 public class MixinAbstractContainerScreen {
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"), method = "extractTooltip(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V")
+	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;Z)V"), method = "extractTooltip(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V")
 	public void patchouli_onExtractTooltip(GuiGraphicsExtractor extractor, int x, int y, CallbackInfo info, @Local ItemStack stack) {
 		TooltipHandler.onTooltip(extractor, stack, x, y);
 	}
