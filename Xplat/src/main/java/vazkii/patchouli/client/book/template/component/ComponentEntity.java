@@ -49,7 +49,7 @@ public class ComponentEntity extends TemplateComponent {
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor graphics, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (errored) {
-			graphics.text(page.fontRenderer, Component.translatable("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000, false);
+			graphics.text(page.fontRenderer, Component.translatable("patchouli.gui.lexicon.loading_error"), x, y, 0xFFFF0000, false);
 		}
 
 		if (entity != null) {

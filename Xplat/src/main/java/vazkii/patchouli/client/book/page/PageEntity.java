@@ -77,7 +77,7 @@ public class PageEntity extends PageWithText {
 		}
 
 		if (errored) {
-			graphics.text(fontRenderer, I18n.get("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000, true);
+			graphics.text(fontRenderer, I18n.get("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFFFF0000, true);
 		}
 
 		if (entity != null) {

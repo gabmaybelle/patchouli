@@ -22,7 +22,7 @@ public class GuiButtonBookEye extends GuiButtonBook {
 		super.extractContents(graphics, mouseX, mouseY, partialTicks);
 
 		if (!PersistentData.data.clickedVisualize && (ClientTicker.ticksInGame) % 20 < 10) {
-			graphics.text(parent.getMinecraft().font, "!", getX(), getY(), 0xFF3333, true);
+			graphics.text(parent.getMinecraft().font, "!", getX(), getY(), 0xFFFF3333, true);
 		}
 	}
 }

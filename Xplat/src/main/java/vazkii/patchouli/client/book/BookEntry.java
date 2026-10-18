@@ -86,7 +86,8 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 		this.sortnum = GsonHelper.getAsInt(root, "sortnum", 0);
 		var entryColor = GsonHelper.getAsString(root, "entry_color", null);
 		if (entryColor != null) {
-			this.entryColor = Integer.parseInt(entryColor, 16);
+			// PORT-26.3: text colours are ARGB now; without an alpha byte the entry name is drawn invisible
+			this.entryColor = 0xFF000000 | Integer.parseInt(entryColor, 16);
 		} else {
 			this.entryColor = book.textColor;
 		}

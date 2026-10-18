@@ -30,7 +30,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 			GuiBook.drawFromTexture(graphics, book, px, py, u + 11, v, width, height);
 			parent.setTooltip(getTooltipLines());
 		}
-		graphics.text(parent.getMinecraft().font, "+", px, py, 0x00FF01, true);
+		graphics.text(parent.getMinecraft().font, "+", px, py, 0xFF00FF01, true);
 	}
 
 	@Override

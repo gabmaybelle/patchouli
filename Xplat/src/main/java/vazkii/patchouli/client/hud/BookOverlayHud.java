@@ -46,13 +46,13 @@ public final class BookOverlayHud {
 						graphics.itemDecorations(mc.font, bookStack, (x + 8) * 2, (y + 8) * 2);
 						graphics.pose().popMatrix();
 
-						graphics.text(mc.font, entry.getName(), x + 18, y + 3, 0xFFFFFF, false);
+						graphics.text(mc.font, entry.getName(), x + 18, y + 3, 0xFFFFFFFF, false);
 
 						graphics.pose().pushMatrix();
 						graphics.pose().scale(0.75F, 0.75F);
 						Component s = Component.translatable("patchouli.gui.lexicon." + (player.isShiftKeyDown() ? "view" : "sneak"))
 								.withStyle(ChatFormatting.ITALIC);
-						graphics.text(mc.font, s, (int) ((x + 18) / 0.75F), (int) ((y + 14) / 0.75F), 0xBBBBBB, false);
+						graphics.text(mc.font, s, (int) ((x + 18) / 0.75F), (int) ((y + 14) / 0.75F), 0xFFBBBBBB, false);
 						graphics.pose().popMatrix();
 					}
 				}
